@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Autenticazione Supabase</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="languages.js"></script>
     <style>
         * {
             margin: 0;
@@ -14,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -40,26 +41,45 @@
 
         .tabs {
             display: flex;
-            gap: 10px;
+            gap: 0;
             margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
         }
 
         .tab {
             flex: 1;
-            padding: 12px;
-            background: #f0f0f0;
+            padding: 14px 20px;
+            background: white;
             border: none;
-            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
             color: #666;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+        }
+
+        .tab:first-child {
+            border-right: 1px solid #e0e0e0;
         }
 
         .tab.active {
-            background: #667eea;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
+        }
+
+        .tab:not(.active):hover {
+            background: #f8f9fa;
+        }
+
+        .tab-icon {
+            font-size: 18px;
         }
 
         .form-group {
@@ -85,25 +105,26 @@
 
         input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #4facfe;
         }
 
         button[type="submit"] {
             width: 100%;
             padding: 14px;
-            background: #667eea;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             margin-top: 10px;
         }
 
         button[type="submit"]:hover {
-            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
         }
 
         button[type="submit"]:disabled {
@@ -191,56 +212,59 @@
     <div class="container">
         <!-- Auth Section -->
         <div id="authSection">
-            <h1>Benvenuto</h1>
+            <h1 id="welcomeTitle"></h1>
             
             <div class="error" id="errorMessage"></div>
             <div class="success" id="successMessage"></div>
 
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('login')">Login</button>
-                <button class="tab" onclick="switchTab('register')">Registrati</button>
+                <button class="tab active" onclick="switchTab('login')">
+                    <span class="tab-icon">🔑</span>
+                    <span id="loginTab"></span>
+                </button>
+                <button class="tab" onclick="switchTab('register')">
+                    <span class="tab-icon">✨</span>
+                    <span id="registerTab"></span>
+                </button>
             </div>
 
             <!-- Login Form -->
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" required placeholder="tua@email.com">
+                    <label for="loginEmail" id="loginEmailLabel"></label>
+                    <input type="email" id="loginEmail" required>
                 </div>
                 <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                    <label for="loginPassword" id="loginPasswordLabel"></label>
+                    <input type="password" id="loginPassword" required>
                 </div>
-                <button type="submit">Accedi</button>
+                <button type="submit" id="loginSubmitBtn"></button>
             </form>
 
             <!-- Register Form -->
             <form id="registerForm" class="hidden">
                 <div class="form-group">
-                    <label for="registerEmail">Email</label>
-                    <input type="email" id="registerEmail" required placeholder="tua@email.com">
+                    <label for="registerEmail" id="registerEmailLabel"></label>
+                    <input type="email" id="registerEmail" required>
                 </div>
                 <div class="form-group">
-                    <label for="registerPassword">Password</label>
-                    <input type="password" id="registerPassword" required placeholder="••••••••" minlength="6">
+                    <label for="registerPassword" id="registerPasswordLabel"></label>
+                    <input type="password" id="registerPassword" required minlength="6">
                 </div>
                 <div class="form-group">
-                    <label for="registerPasswordConfirm">Conferma Password</label>
-                    <input type="password" id="registerPasswordConfirm" required placeholder="••••••••" minlength="6">
+                    <label for="registerPasswordConfirm" id="registerPasswordConfirmLabel"></label>
+                    <input type="password" id="registerPasswordConfirm" required minlength="6">
                 </div>
-                <button type="submit">Registrati</button>
+                <button type="submit" id="registerSubmitBtn"></button>
             </form>
         </div>
 
         <!-- Dashboard Section -->
         <div id="dashboardSection" class="hidden dashboard">
-            <h2>Area Riservata</h2>
+            <h2 id="dashboardTitle"></h2>
             <div class="user-info" id="userInfo"></div>
-            <p>
-                Benvenuto nell'area riservata! Questa sezione è visibile solo agli utenti autenticati.
-                Qui puoi gestire il tuo account e accedere a tutte le funzionalità riservate.
-            </p>
-            <button class="logout-btn" onclick="logout()">Esci</button>
+            <p id="dashboardText"></p>
+            <button class="logout-btn" onclick="logout()" id="logoutBtn"></button>
         </div>
     </div>
 
@@ -251,6 +275,34 @@
         
         const { createClient } = supabase;
         const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Initialize translations
+        function initTranslations() {
+            document.getElementById('welcomeTitle').textContent = t.welcome;
+            document.getElementById('loginTab').textContent = t.login;
+            document.getElementById('registerTab').textContent = t.register;
+            
+            // Login form
+            document.getElementById('loginEmailLabel').textContent = t.email;
+            document.getElementById('loginPasswordLabel').textContent = t.password;
+            document.getElementById('loginEmail').placeholder = t.emailPlaceholder;
+            document.getElementById('loginPassword').placeholder = t.passwordPlaceholder;
+            document.getElementById('loginSubmitBtn').textContent = t.loginButton;
+            
+            // Register form
+            document.getElementById('registerEmailLabel').textContent = t.email;
+            document.getElementById('registerPasswordLabel').textContent = t.password;
+            document.getElementById('registerPasswordConfirmLabel').textContent = t.confirmPassword;
+            document.getElementById('registerEmail').placeholder = t.emailPlaceholder;
+            document.getElementById('registerPassword').placeholder = t.passwordPlaceholder;
+            document.getElementById('registerPasswordConfirm').placeholder = t.passwordPlaceholder;
+            document.getElementById('registerSubmitBtn').textContent = t.registerButton;
+            
+            // Dashboard
+            document.getElementById('dashboardTitle').textContent = t.dashboardTitle;
+            document.getElementById('dashboardText').textContent = t.dashboardText;
+            document.getElementById('logoutBtn').textContent = t.logout;
+        }
 
         // Elements
         const authSection = document.getElementById('authSection');
@@ -309,7 +361,7 @@
             
             const btn = loginForm.querySelector('button[type="submit"]');
             btn.disabled = true;
-            btn.textContent = 'Accesso in corso...';
+            btn.textContent = t.loggingIn;
             
             try {
                 const { data, error } = await supabaseClient.auth.signInWithPassword({
@@ -319,7 +371,7 @@
                 
                 if (error) throw error;
                 
-                showSuccess('Login effettuato con successo!');
+                showSuccess(t.loginSuccess);
                 setTimeout(() => {
                     showDashboard(data.user);
                 }, 500);
@@ -328,7 +380,7 @@
                 showError(error.message || 'Errore durante il login');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Accedi';
+                btn.textContent = t.loginButton;
             }
         });
 
@@ -342,13 +394,13 @@
             const confirmPassword = document.getElementById('registerPasswordConfirm').value;
             
             if (password !== confirmPassword) {
-                showError('Le password non coincidono');
+                showError(t.passwordMismatch);
                 return;
             }
             
             const btn = registerForm.querySelector('button[type="submit"]');
             btn.disabled = true;
-            btn.textContent = 'Registrazione in corso...';
+            btn.textContent = t.registering;
             
             try {
                 const { data, error } = await supabaseClient.auth.signUp({
@@ -358,7 +410,7 @@
                 
                 if (error) throw error;
                 
-                showSuccess('Registrazione completata! Controlla la tua email per confermare l\'account.');
+                showSuccess(t.registerSuccess);
                 registerForm.reset();
                 
                 // Se la conferma email è disabilitata, l'utente sarà loggato automaticamente
@@ -372,7 +424,7 @@
                 showError(error.message || 'Errore durante la registrazione');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Registrati';
+                btn.textContent = t.registerButton;
             }
         });
 
@@ -380,7 +432,7 @@
         function showDashboard(user) {
             authSection.classList.add('hidden');
             dashboardSection.classList.remove('hidden');
-            userInfo.innerHTML = `<strong>Email:</strong> ${user.email}`;
+            userInfo.innerHTML = `<strong>${t.userEmail}</strong> ${user.email}`;
         }
 
         // Show auth
@@ -399,7 +451,7 @@
                 if (error) throw error;
                 showAuth();
             } catch (error) {
-                alert('Errore durante il logout: ' + error.message);
+                alert(t.logoutError + error.message);
             }
         }
 
@@ -424,6 +476,7 @@
         });
 
         // Initialize
+        initTranslations();
         checkSession();
     </script>
 </body>
