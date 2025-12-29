@@ -1,7 +1,7 @@
 // Language translations
 const translations = {
     it: {
-        welcome: "Benvenuto",
+        welcome: "LifeTracker ★",
         login: "Accedi",
         register: "Registrati",
         email: "Email",
@@ -23,7 +23,7 @@ const translations = {
         userEmail: "Email:"
     },
     en: {
-        welcome: "Welcome",
+        welcome: "LifeTracker ★",
         login: "Login",
         register: "Sign Up",
         email: "Email",
