@@ -15,7 +15,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -70,7 +70,7 @@
         }
 
         .tab.active {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
@@ -105,13 +105,17 @@
 
         input:focus {
             outline: none;
-            border-color: #4facfe;
+            border-color: #667eea;
+        }
+
+        input.error {
+            border-color: #dc3545;
         }
 
         button[type="submit"] {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -124,7 +128,7 @@
 
         button[type="submit"]:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         button[type="submit"]:disabled {
@@ -142,6 +146,17 @@
             display: none;
         }
 
+        .field-error {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .field-error.show {
+            display: block;
+        }
+
         .success {
             background: #efe;
             color: #3c3;
@@ -154,6 +169,29 @@
 
         .hidden {
             display: none !important;
+        }
+
+        .form-container {
+            min-height: 380px;
+            position: relative;
+        }
+
+        form {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        form.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        form:not(.hidden) {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .dashboard {
@@ -228,35 +266,42 @@
                 </button>
             </div>
 
-            <!-- Login Form -->
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail" id="loginEmailLabel"></label>
-                    <input type="email" id="loginEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword" id="loginPasswordLabel"></label>
-                    <input type="password" id="loginPassword" required>
-                </div>
-                <button type="submit" id="loginSubmitBtn"></button>
-            </form>
+            <div class="form-container">
+                <!-- Login Form -->
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail" id="loginEmailLabel"></label>
+                        <input type="email" id="loginEmail" required>
+                        <div class="field-error" id="loginEmailError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword" id="loginPasswordLabel"></label>
+                        <input type="password" id="loginPassword" required>
+                        <div class="field-error" id="loginPasswordError"></div>
+                    </div>
+                    <button type="submit" id="loginSubmitBtn"></button>
+                </form>
 
-            <!-- Register Form -->
-            <form id="registerForm" class="hidden">
-                <div class="form-group">
-                    <label for="registerEmail" id="registerEmailLabel"></label>
-                    <input type="email" id="registerEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerPassword" id="registerPasswordLabel"></label>
-                    <input type="password" id="registerPassword" required minlength="6">
-                </div>
-                <div class="form-group">
-                    <label for="registerPasswordConfirm" id="registerPasswordConfirmLabel"></label>
-                    <input type="password" id="registerPasswordConfirm" required minlength="6">
-                </div>
-                <button type="submit" id="registerSubmitBtn"></button>
-            </form>
+                <!-- Register Form -->
+                <form id="registerForm" class="hidden">
+                    <div class="form-group">
+                        <label for="registerEmail" id="registerEmailLabel"></label>
+                        <input type="email" id="registerEmail" required>
+                        <div class="field-error" id="registerEmailError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword" id="registerPasswordLabel"></label>
+                        <input type="password" id="registerPassword" required minlength="6">
+                        <div class="field-error" id="registerPasswordError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPasswordConfirm" id="registerPasswordConfirmLabel"></label>
+                        <input type="password" id="registerPasswordConfirm" required minlength="6">
+                        <div class="field-error" id="registerPasswordConfirmError"></div>
+                    </div>
+                    <button type="submit" id="registerSubmitBtn"></button>
+                </form>
+            </div>
         </div>
 
         <!-- Dashboard Section -->
@@ -319,6 +364,7 @@
             tabs.forEach(t => t.classList.remove('active'));
             
             hideMessages();
+            hideAllFieldErrors();
             
             if (tab === 'login') {
                 tabs[0].classList.add('active');
@@ -351,13 +397,55 @@
             successMessage.style.display = 'none';
         }
 
+        // Show field error
+        function showFieldError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+            if (errorElement && inputElement) {
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+                inputElement.classList.add('error');
+            }
+        }
+
+        // Hide field error
+        function hideFieldError(fieldId) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+            if (errorElement && inputElement) {
+                errorElement.classList.remove('show');
+                inputElement.classList.remove('error');
+            }
+        }
+
+        // Hide all field errors
+        function hideAllFieldErrors() {
+            const errorElements = document.querySelectorAll('.field-error');
+            const inputElements = document.querySelectorAll('input');
+            errorElements.forEach(el => el.classList.remove('show'));
+            inputElements.forEach(el => el.classList.remove('error'));
+        }
+
         // Login handler
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
+            hideAllFieldErrors();
             
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
+            
+            // Validation
+            let hasError = false;
+            if (!email) {
+                showFieldError('loginEmail', currentLang === 'it' ? 'Email richiesta' : 'Email required');
+                hasError = true;
+            }
+            if (!password) {
+                showFieldError('loginPassword', currentLang === 'it' ? 'Password richiesta' : 'Password required');
+                hasError = true;
+            }
+            if (hasError) return;
             
             const btn = loginForm.querySelector('button[type="submit"]');
             btn.disabled = true;
@@ -388,15 +476,33 @@
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
+            hideAllFieldErrors();
             
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
             const confirmPassword = document.getElementById('registerPasswordConfirm').value;
             
-            if (password !== confirmPassword) {
-                showError(t.passwordMismatch);
-                return;
+            // Validation
+            let hasError = false;
+            if (!email) {
+                showFieldError('registerEmail', currentLang === 'it' ? 'Email richiesta' : 'Email required');
+                hasError = true;
             }
+            if (!password) {
+                showFieldError('registerPassword', currentLang === 'it' ? 'Password richiesta' : 'Password required');
+                hasError = true;
+            } else if (password.length < 6) {
+                showFieldError('registerPassword', currentLang === 'it' ? 'Minimo 6 caratteri' : 'Minimum 6 characters');
+                hasError = true;
+            }
+            if (!confirmPassword) {
+                showFieldError('registerPasswordConfirm', currentLang === 'it' ? 'Conferma password richiesta' : 'Password confirmation required');
+                hasError = true;
+            } else if (password !== confirmPassword) {
+                showFieldError('registerPasswordConfirm', t.passwordMismatch);
+                hasError = true;
+            }
+            if (hasError) return;
             
             const btn = registerForm.querySelector('button[type="submit"]');
             btn.disabled = true;
