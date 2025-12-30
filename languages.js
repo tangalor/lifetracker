@@ -20,7 +20,10 @@ const translations = {
         passwordPlaceholder: "••••••••",
         dashboardTitle: "Area Riservata",
         dashboardText: "Benvenuto nell'area riservata! Questa sezione è visibile solo agli utenti autenticati. Qui puoi gestire il tuo account e accedere a tutte le funzionalità riservate.",
-        userEmail: "Email:"
+        userEmail: "Email:",
+        googleLogin: "Accedi con Google",
+        orDivider: "oppure",
+        usePersonalEmail: "Utilizza la tua mail personale"
     },
     en: {
         welcome: "LifeTracker ★",
@@ -42,7 +45,10 @@ const translations = {
         passwordPlaceholder: "••••••••",
         dashboardTitle: "Dashboard",
         dashboardText: "Welcome to your dashboard! This section is only visible to authenticated users. Here you can manage your account and access all reserved features.",
-        userEmail: "Email:"
+        userEmail: "Email:",
+        googleLogin: "Sign in with Google",
+        orDivider: "or",
+        usePersonalEmail: "Use your personal email"
     }
 };
 
