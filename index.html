@@ -83,7 +83,7 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         label {
@@ -149,12 +149,14 @@
         .field-error {
             color: #dc3545;
             font-size: 12px;
-            margin-top: 4px;
-            display: none;
+            margin-top: 6px;
+            min-height: 18px;
+            opacity: 0;
+            transition: opacity 0.2s;
         }
 
         .field-error.show {
-            display: block;
+            opacity: 1;
         }
 
         .success {
@@ -426,11 +428,21 @@
             inputElements.forEach(el => el.classList.remove('error'));
         }
 
+        // Add focus listeners to clear errors on input focus
+        function addInputFocusListeners() {
+            const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    const fieldId = this.id;
+                    hideFieldError(fieldId);
+                });
+            });
+        }
+
         // Login handler
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
-            hideAllFieldErrors();
             
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
@@ -476,7 +488,6 @@
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessages();
-            hideAllFieldErrors();
             
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
@@ -583,6 +594,7 @@
 
         // Initialize
         initTranslations();
+        addInputFocusListeners();
         checkSession();
     </script>
 </body>
