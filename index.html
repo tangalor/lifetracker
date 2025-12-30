@@ -643,9 +643,27 @@
         // Logout
         async function logout() {
             try {
-                const { error } = await supabaseClient.auth.signOut();
+                // Sign out from Supabase (this also clears the session)
+                const { error } = await supabaseClient.auth.signOut({
+                    scope: 'global'  // This ensures OAuth providers like Google are also logged out
+                });
                 if (error) throw error;
+                
+                // Clear all local storage and session storage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // Clear cookies related to authentication
+                document.cookie.split(";").forEach(function(c) { 
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                });
+                
                 showAuth();
+                
+                // Optional: reload the page to ensure clean state
+                setTimeout(() => {
+                    window.location.reload();
+                }, 100);
             } catch (error) {
                 alert(t.logoutError + error.message);
             }
