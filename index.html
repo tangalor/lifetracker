@@ -330,6 +330,152 @@
             width: 30px;
         }
 
+        /* User Badge */
+        .user-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            overflow: hidden;
+        }
+
+        .user-badge:hover {
+            transform: scale(1.1);
+        }
+
+        .user-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* User Modal */
+        .user-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 300;
+        }
+
+        .user-modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .user-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 350;
+        }
+
+        .user-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .modal-user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+        }
+
+        .modal-user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-user-name {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .modal-user-email {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .modal-logout-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
         /* Sidebar */
         .sidebar {
             position: fixed;
@@ -572,7 +718,19 @@
                     <span></span>
                 </div>
                 <div class="header-title" id="currentPageTitle">Home</div>
-                <div class="header-spacer"></div>
+                <div class="user-badge" onclick="openUserModal()" id="userBadge"></div>
+            </div>
+
+            <!-- User Modal Overlay -->
+            <div class="user-modal-overlay" onclick="closeUserModal()"></div>
+
+            <!-- User Modal -->
+            <div class="user-modal" id="userModal">
+                <button class="modal-close" onclick="closeUserModal()">×</button>
+                <div class="modal-user-avatar" id="modalUserAvatar"></div>
+                <div class="modal-user-name" id="modalUserName"></div>
+                <div class="modal-user-email" id="modalUserEmail"></div>
+                <button class="modal-logout-btn" onclick="logout()" id="modalLogoutBtn"></button>
             </div>
 
             <!-- Sidebar Overlay -->
@@ -897,12 +1055,78 @@
             document.getElementById('menuCalendar').textContent = t.menuCalendar;
             document.getElementById('menuStats').textContent = t.menuStats;
             document.getElementById('currentPageTitle').textContent = t.menuHome;
+            document.getElementById('modalLogoutBtn').textContent = t.logout;
             
             // Store current user
             window.currentUser = user;
             
+            // Update user badge
+            updateUserBadge(user);
+            
             // Load tasks when showing dashboard
             loadTasks();
+        }
+
+        // Update user badge with initials or avatar
+        function updateUserBadge(user) {
+            const badge = document.getElementById('userBadge');
+            const modalAvatar = document.getElementById('modalUserAvatar');
+            const modalName = document.getElementById('modalUserName');
+            const modalEmail = document.getElementById('modalUserEmail');
+            
+            // Set email
+            modalEmail.textContent = user.email;
+            
+            // Try to get user metadata (name, avatar)
+            const metadata = user.user_metadata || {};
+            const fullName = metadata.full_name || metadata.name || '';
+            const avatarUrl = metadata.avatar_url || metadata.picture || '';
+            
+            if (fullName) {
+                modalName.textContent = fullName;
+            } else {
+                modalName.textContent = user.email.split('@')[0];
+            }
+            
+            // Get initials
+            let initials = '';
+            if (fullName) {
+                const nameParts = fullName.trim().split(' ');
+                if (nameParts.length >= 2) {
+                    initials = nameParts[0][0] + nameParts[nameParts.length - 1][0];
+                } else if (nameParts.length === 1) {
+                    initials = nameParts[0].substring(0, 2);
+                }
+                initials = initials.toUpperCase();
+            } else {
+                // Use first 2 letters of email
+                initials = user.email.substring(0, 2).toUpperCase();
+            }
+            
+            // Set badge and modal avatar
+            if (avatarUrl) {
+                badge.innerHTML = `<img src="${avatarUrl}" alt="User">`;
+                modalAvatar.innerHTML = `<img src="${avatarUrl}" alt="User">`;
+            } else {
+                badge.textContent = initials;
+                modalAvatar.textContent = initials;
+            }
+        }
+
+        // Open user modal
+        function openUserModal() {
+            const modal = document.getElementById('userModal');
+            const overlay = document.querySelector('.user-modal-overlay');
+            modal.classList.add('show');
+            overlay.classList.add('show');
+        }
+
+        // Close user modal
+        function closeUserModal() {
+            const modal = document.getElementById('userModal');
+            const overlay = document.querySelector('.user-modal-overlay');
+            modal.classList.remove('show');
+            overlay.classList.remove('show');
         }
 
         // Toggle sidebar
