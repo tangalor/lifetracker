@@ -541,7 +541,7 @@
 
         /* App Content */
         .app-content {
-            padding-top: 80px;
+            padding-top: 10px;
             padding-bottom: 20px;
             min-height: 100vh;
         }
@@ -570,6 +570,218 @@
             margin-bottom: 20px;
             text-align: center;
             line-height: 1.5;
+        }
+
+        .home-date {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .category-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .category-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .category-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .category-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Category Modal */
+        .category-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 300;
+        }
+
+        .category-modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .category-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            padding: 30px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 350;
+            overflow-y: auto;
+        }
+
+        .category-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .category-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .category-modal-icon {
+            font-size: 36px;
+        }
+
+        .category-modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .home-date {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .category-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .category-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .category-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .category-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Category Modal */
+        .category-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 300;
+        }
+
+        .category-modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .category-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            padding: 30px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 350;
+            overflow-y: auto;
+        }
+
+        .category-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .category-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .category-modal-icon {
+            font-size: 36px;
+        }
+
+        .category-modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
         }
 
         /* Task List */
@@ -741,6 +953,36 @@
                 <button class="modal-logout-btn" onclick="logout()" id="modalLogoutBtn"></button>
             </div>
 
+            <!-- Category Modal Overlay -->
+            <div class="category-modal-overlay" onclick="closeCategoryModal()"></div>
+
+            <!-- Category Modal -->
+            <div class="category-modal" id="categoryModal">
+                <button class="modal-close" onclick="closeCategoryModal()">×</button>
+                <div class="category-modal-header">
+                    <span class="category-modal-icon" id="categoryModalIcon"></span>
+                    <span class="category-modal-title" id="categoryModalTitle"></span>
+                </div>
+                <div class="task-list" id="categoryTasksList">
+                    <div class="loading">Caricamento...</div>
+                </div>
+            </div>
+
+            <!-- Category Modal Overlay -->
+            <div class="category-modal-overlay" onclick="closeCategoryModal()"></div>
+
+            <!-- Category Modal -->
+            <div class="category-modal" id="categoryModal">
+                <button class="modal-close" onclick="closeCategoryModal()">×</button>
+                <div class="category-modal-header">
+                    <span class="category-modal-icon" id="categoryModalIcon"></span>
+                    <span class="category-modal-title" id="categoryModalTitle"></span>
+                </div>
+                <div class="task-list" id="categoryTasksList">
+                    <div class="loading">Caricamento...</div>
+                </div>
+            </div>
+
             <!-- Sidebar Overlay -->
             <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
@@ -768,11 +1010,9 @@
             <div class="app-content">
                 <!-- Home Page -->
                 <div class="page active" id="homePage">
-                    <div class="dashboard" style="text-align: center;">
-                        <h2 id="dashboardTitle"></h2>
-                        <div class="user-info" id="userInfo" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; color: #333; font-size: 14px;"></div>
-                        <p id="dashboardText" style="color: #666; margin-bottom: 30px; line-height: 1.6;"></p>
-                        <button class="logout-btn" onclick="logout()" id="logoutBtn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; color: white;"></button>
+                    <div class="home-date" id="homeDate"></div>
+                    <div class="categories-grid" id="categoriesGrid">
+                        <div class="loading">Caricamento categorie...</div>
                     </div>
                 </div>
 
@@ -1056,7 +1296,6 @@
         function showDashboard(user) {
             authSection.classList.add('hidden');
             dashboardSection.classList.remove('hidden');
-            userInfo.innerHTML = `<strong>${t.userEmail}</strong> ${user.email}`;
             
             // Initialize menu translations now that dashboard is visible
             document.getElementById('menuHome').textContent = t.menuHome;
@@ -1073,8 +1312,162 @@
             // Update user badge
             updateUserBadge(user);
             
-            // Load tasks when showing dashboard
+            // Display current date in home
+            displayCurrentDate();
+            
+            // Load categories and tasks
+            loadCategories();
             loadTasks();
+        }
+
+        // Display current date
+        function displayCurrentDate() {
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = today.toLocaleDateString(currentLang === 'it' ? 'it-IT' : 'en-US', options);
+            document.getElementById('homeDate').textContent = dateString;
+        }
+
+        // Get category icon based on category name
+        function getCategoryIcon(category) {
+            const icons = {
+                'LAVORO': '💼',
+                'WORK': '💼',
+                'CASA': '🏠',
+                'HOME': '🏠',
+                'SPORT': '⚽',
+                'FITNESS': '🏋️',
+                'STUDIO': '📚',
+                'STUDY': '📚',
+                'SALUTE': '❤️',
+                'HEALTH': '❤️',
+                'SHOPPING': '🛍️',
+                'SPESA': '🛍️',
+                'VIAGGI': '✈️',
+                'TRAVEL': '✈️',
+                'FAMIGLIA': '👨‍👩‍👧‍👦',
+                'FAMILY': '👨‍👩‍👧‍👦',
+                'FINANZE': '💰',
+                'FINANCE': '💰',
+                'HOBBY': '🎨',
+                'PROGETTI': '🛠️',
+                'PROJECTS': '🛠️',
+                'PERSONALE': '👤',
+                'PERSONAL': '👤'
+            };
+            return icons[category.toUpperCase()] || '📋';
+        }
+
+        // Load categories from tasks
+        async function loadCategories() {
+            const categoriesGrid = document.getElementById('categoriesGrid');
+            categoriesGrid.innerHTML = '<div class="loading">Caricamento categorie...</div>';
+
+            try {
+                const { data: tasks, error } = await supabaseClient
+                    .from('attivita')
+                    .select('titolo')
+                    .eq('user_id', window.currentUser.id);
+
+                if (error) throw error;
+
+                if (!tasks || tasks.length === 0) {
+                    categoriesGrid.innerHTML = '<div class="no-tasks">Nessuna categoria disponibile</div>';
+                    return;
+                }
+
+                // Extract unique categories
+                const categoriesSet = new Set();
+                tasks.forEach(task => {
+                    if (task.titolo && task.titolo.includes(' / ')) {
+                        const category = task.titolo.split(' / ')[0].trim().toUpperCase();
+                        categoriesSet.add(category);
+                    }
+                });
+
+                const categories = Array.from(categoriesSet).sort();
+
+                if (categories.length === 0) {
+                    categoriesGrid.innerHTML = '<div class="no-tasks">Nessuna categoria disponibile</div>';
+                    return;
+                }
+
+                // Render categories
+                categoriesGrid.innerHTML = categories.map(category => {
+                    const icon = getCategoryIcon(category);
+                    return `
+                        <div class="category-box" onclick="openCategoryModal('${escapeHtml(category)}')">
+                            <span class="category-icon">${icon}</span>
+                            <span class="category-label">${escapeHtml(category)}</span>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                categoriesGrid.innerHTML = '<div class="no-tasks">Errore nel caricamento delle categorie</div>';
+            }
+        }
+
+        // Open category modal
+        async function openCategoryModal(category) {
+            const modal = document.getElementById('categoryModal');
+            const overlay = document.querySelector('.category-modal-overlay');
+            const modalIcon = document.getElementById('categoryModalIcon');
+            const modalTitle = document.getElementById('categoryModalTitle');
+            const tasksList = document.getElementById('categoryTasksList');
+
+            modalIcon.textContent = getCategoryIcon(category);
+            modalTitle.textContent = category;
+            tasksList.innerHTML = '<div class="loading">Caricamento attività...</div>';
+
+            modal.classList.add('show');
+            overlay.classList.add('show');
+
+            try {
+                const { data: tasks, error } = await supabaseClient
+                    .from('attivita')
+                    .select('*')
+                    .eq('user_id', window.currentUser.id)
+                    .order('titolo', { ascending: true });
+
+                if (error) throw error;
+
+                // Filter tasks by category
+                const categoryTasks = tasks.filter(task => {
+                    if (task.titolo && task.titolo.includes(' / ')) {
+                        const taskCategory = task.titolo.split(' / ')[0].trim().toUpperCase();
+                        return taskCategory === category;
+                    }
+                    return false;
+                });
+
+                if (categoryTasks.length === 0) {
+                    tasksList.innerHTML = '<div class="no-tasks">Nessuna attività in questa categoria</div>';
+                    return;
+                }
+
+                // Render tasks
+                tasksList.innerHTML = categoryTasks.map(task => {
+                    const color = task.codice_colore || '#667eea';
+                    return `
+                        <div class="task-card" style="border-left-color: ${color};">
+                            <div class="task-title">${escapeHtml(task.titolo || '')}</div>
+                            <div class="task-description">${escapeHtml(task.descrizione || '')}</div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading category tasks:', error);
+                tasksList.innerHTML = '<div class="no-tasks">Errore nel caricamento delle attività</div>';
+            }
+        }
+
+        // Close category modal
+        function closeCategoryModal() {
+            const modal = document.getElementById('categoryModal');
+            const overlay = document.querySelector('.category-modal-overlay');
+            modal.classList.remove('show');
+            overlay.classList.remove('show');
         }
 
         // Update user badge with initials or avatar
