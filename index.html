@@ -891,6 +891,13 @@
             dashboardSection.classList.remove('hidden');
             userInfo.innerHTML = `<strong>${t.userEmail}</strong> ${user.email}`;
             
+            // Initialize menu translations now that dashboard is visible
+            document.getElementById('menuHome').textContent = t.menuHome;
+            document.getElementById('menuTasks').textContent = t.menuTasks;
+            document.getElementById('menuCalendar').textContent = t.menuCalendar;
+            document.getElementById('menuStats').textContent = t.menuStats;
+            document.getElementById('currentPageTitle').textContent = t.menuHome;
+            
             // Store current user
             window.currentUser = user;
             
