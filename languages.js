@@ -23,7 +23,13 @@ const translations = {
         userEmail: "Email:",
         googleLogin: "Accedi con Google",
         orDivider: "oppure",
-        usePersonalEmail: "Utilizza la tua mail personale"
+        usePersonalEmail: "Utilizza la tua mail personale",
+        menuHome: "Home",
+        menuTasks: "Lista attività",
+        menuCalendar: "Calendario",
+        menuStats: "Statistiche",
+        loadingTasks: "Caricamento attività...",
+        noTasks: "Nessuna attività trovata"
     },
     en: {
         welcome: "LifeTracker ★",
@@ -48,7 +54,13 @@ const translations = {
         userEmail: "Email:",
         googleLogin: "Sign in with Google",
         orDivider: "or",
-        usePersonalEmail: "Use your personal email"
+        usePersonalEmail: "Use your personal email",
+        menuHome: "Home",
+        menuTasks: "Task List",
+        menuCalendar: "Calendar",
+        menuStats: "Statistics",
+        loadingTasks: "Loading tasks...",
+        noTasks: "No tasks found"
     }
 };
 
