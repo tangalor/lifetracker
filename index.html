@@ -285,6 +285,186 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .hamburger {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background: #667eea;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-spacer {
+            width: 30px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: left 0.3s;
+            z-index: 200;
+            padding-top: 60px;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 150;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .menu-item {
+            padding: 18px 20px;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+        }
+
+        .menu-item:hover {
+            background: #f8f9fa;
+            border-left-color: #667eea;
+        }
+
+        .menu-item.active {
+            background: #f0f2ff;
+            border-left-color: #667eea;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .menu-icon {
+            font-size: 20px;
+        }
+
+        /* App Content */
+        .app-content {
+            padding-top: 80px;
+            padding-bottom: 20px;
+            min-height: 100vh;
+        }
+
+        .page {
+            display: none;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 24px;
+            color: #666;
+        }
+
+        /* Task List */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .task-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-tasks {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 25px;
@@ -297,6 +477,14 @@
             .tab {
                 font-size: 14px;
                 padding: 10px;
+            }
+
+            .header {
+                padding: 0 15px;
+            }
+
+            .page {
+                padding: 15px;
             }
         }
     </style>
@@ -375,11 +563,70 @@
         </div>
 
         <!-- Dashboard Section -->
-        <div id="dashboardSection" class="hidden dashboard">
-            <h2 id="dashboardTitle"></h2>
-            <div class="user-info" id="userInfo"></div>
-            <p id="dashboardText"></p>
-            <button class="logout-btn" onclick="logout()" id="logoutBtn"></button>
+        <div id="dashboardSection" class="hidden">
+            <!-- Header -->
+            <div class="header">
+                <div class="hamburger" onclick="toggleSidebar()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="header-title" id="currentPageTitle">Home</div>
+                <div class="header-spacer"></div>
+            </div>
+
+            <!-- Sidebar Overlay -->
+            <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+            <!-- Sidebar -->
+            <div class="sidebar" id="sidebar">
+                <div class="menu-item active" data-page="home" onclick="navigateTo('home')">
+                    <span class="menu-icon">🏠</span>
+                    <span id="menuHome">Home</span>
+                </div>
+                <div class="menu-item" data-page="tasks" onclick="navigateTo('tasks')">
+                    <span class="menu-icon">📋</span>
+                    <span id="menuTasks">Lista attività</span>
+                </div>
+                <div class="menu-item" data-page="calendar" onclick="navigateTo('calendar')">
+                    <span class="menu-icon">📅</span>
+                    <span id="menuCalendar">Calendario</span>
+                </div>
+                <div class="menu-item" data-page="stats" onclick="navigateTo('stats')">
+                    <span class="menu-icon">📊</span>
+                    <span id="menuStats">Statistiche</span>
+                </div>
+            </div>
+
+            <!-- App Content -->
+            <div class="app-content">
+                <!-- Home Page -->
+                <div class="page active" id="homePage">
+                    <div class="dashboard" style="text-align: center;">
+                        <h2 id="dashboardTitle"></h2>
+                        <div class="user-info" id="userInfo" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; color: #333; font-size: 14px;"></div>
+                        <p id="dashboardText" style="color: #666; margin-bottom: 30px; line-height: 1.6;"></p>
+                        <button class="logout-btn" onclick="logout()" id="logoutBtn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; color: white;"></button>
+                    </div>
+                </div>
+
+                <!-- Tasks Page -->
+                <div class="page" id="tasksPage">
+                    <div id="tasksList" class="task-list">
+                        <div class="loading">Caricamento attività...</div>
+                    </div>
+                </div>
+
+                <!-- Calendar Page -->
+                <div class="page" id="calendarPage">
+                    <div class="page-placeholder">Calendario</div>
+                </div>
+
+                <!-- Stats Page -->
+                <div class="page" id="statsPage">
+                    <div class="page-placeholder">Statistiche</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -420,6 +667,12 @@
             document.getElementById('dashboardTitle').textContent = t.dashboardTitle;
             document.getElementById('dashboardText').textContent = t.dashboardText;
             document.getElementById('logoutBtn').textContent = t.logout;
+            
+            // Menu
+            document.getElementById('menuHome').textContent = t.menuHome;
+            document.getElementById('menuTasks').textContent = t.menuTasks;
+            document.getElementById('menuCalendar').textContent = t.menuCalendar;
+            document.getElementById('menuStats').textContent = t.menuStats;
         }
 
         // Elements
@@ -637,6 +890,104 @@
             authSection.classList.add('hidden');
             dashboardSection.classList.remove('hidden');
             userInfo.innerHTML = `<strong>${t.userEmail}</strong> ${user.email}`;
+            
+            // Store current user
+            window.currentUser = user;
+            
+            // Load tasks when showing dashboard
+            loadTasks();
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // Close sidebar
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        }
+
+        // Navigate to page
+        function navigateTo(pageName) {
+            // Update active menu item
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === pageName) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Update active page
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageName + 'Page').classList.add('active');
+
+            // Update header title
+            const titles = {
+                home: t.menuHome,
+                tasks: t.menuTasks,
+                calendar: t.menuCalendar,
+                stats: t.menuStats
+            };
+            document.getElementById('currentPageTitle').textContent = titles[pageName];
+
+            // Close sidebar
+            closeSidebar();
+
+            // Load tasks if navigating to tasks page
+            if (pageName === 'tasks') {
+                loadTasks();
+            }
+        }
+
+        // Load tasks from Supabase
+        async function loadTasks() {
+            const tasksList = document.getElementById('tasksList');
+            tasksList.innerHTML = `<div class="loading">${t.loadingTasks}</div>`;
+
+            try {
+                const { data: tasks, error } = await supabaseClient
+                    .from('attivita')
+                    .select('*')
+                    .eq('user_id', window.currentUser.id)
+                    .order('titolo', { ascending: true });
+
+                if (error) throw error;
+
+                if (!tasks || tasks.length === 0) {
+                    tasksList.innerHTML = `<div class="no-tasks">${t.noTasks}</div>`;
+                    return;
+                }
+
+                // Render tasks
+                tasksList.innerHTML = tasks.map(task => {
+                    const color = task.colore || '#667eea';
+                    return `
+                        <div class="task-card" style="border-left-color: ${color};">
+                            <div class="task-title">${escapeHtml(task.titolo || '')}</div>
+                            <div class="task-description">${escapeHtml(task.descrizione || '')}</div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                tasksList.innerHTML = `<div class="no-tasks">Errore nel caricamento delle attività</div>`;
+            }
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // Show auth
