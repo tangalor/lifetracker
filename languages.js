@@ -29,7 +29,8 @@ const translations = {
         menuCalendar: "Calendario",
         menuStats: "Statistiche",
         loadingTasks: "Caricamento attività...",
-        noTasks: "Nessuna attività trovata"
+        noTasks: "Nessuna attività trovata",
+        tasksSubtitle: "Ecco la lista delle attività che sono disponibili per te:"
     },
     en: {
         welcome: "LifeTracker ★",
@@ -60,7 +61,8 @@ const translations = {
         menuCalendar: "Calendar",
         menuStats: "Statistics",
         loadingTasks: "Loading tasks...",
-        noTasks: "No tasks found"
+        noTasks: "No tasks found",
+        tasksSubtitle: "Here is the list of activities available for you:"
     }
 };
 

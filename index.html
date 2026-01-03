@@ -564,6 +564,14 @@
             color: #666;
         }
 
+        .page-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
         /* Task List */
         .task-list {
             display: flex;
@@ -770,6 +778,7 @@
 
                 <!-- Tasks Page -->
                 <div class="page" id="tasksPage">
+                    <div class="page-subtitle" id="tasksSubtitle"></div>
                     <div id="tasksList" class="task-list">
                         <div class="loading">Caricamento attività...</div>
                     </div>
@@ -1056,6 +1065,7 @@
             document.getElementById('menuStats').textContent = t.menuStats;
             document.getElementById('currentPageTitle').textContent = t.menuHome;
             document.getElementById('modalLogoutBtn').textContent = t.logout;
+            document.getElementById('tasksSubtitle').textContent = t.tasksSubtitle;
             
             // Store current user
             window.currentUser = user;
