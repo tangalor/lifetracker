@@ -1675,6 +1675,7 @@
             const overlay = document.querySelector('.user-modal-overlay');
             modal.classList.add('show');
             overlay.classList.add('show');
+            document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'none');
         }
 
         // Close user modal
@@ -1683,14 +1684,32 @@
             const overlay = document.querySelector('.user-modal-overlay');
             modal.classList.remove('show');
             overlay.classList.remove('show');
+            // Mostra le frecce solo se siamo nella home page
+            const homePage = document.getElementById('homePage');
+            if (homePage && homePage.classList.contains('active')) {
+                document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'flex');
+                updateNavigationArrows();
+            }
         }
 
         // Toggle sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.querySelector('.sidebar-overlay');
+            const isOpening = !sidebar.classList.contains('open');
             sidebar.classList.toggle('open');
             overlay.classList.toggle('show');
+            
+            if (isOpening) {
+                document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'none');
+            } else {
+                // Mostra le frecce solo se siamo nella home page
+                const homePage = document.getElementById('homePage');
+                if (homePage && homePage.classList.contains('active')) {
+                    document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'flex');
+                    updateNavigationArrows();
+                }
+            }
         }
 
         // Close sidebar
@@ -1699,6 +1718,13 @@
             const overlay = document.querySelector('.sidebar-overlay');
             sidebar.classList.remove('open');
             overlay.classList.remove('show');
+            
+            // Mostra le frecce solo se siamo nella home page
+            const homePage = document.getElementById('homePage');
+            if (homePage && homePage.classList.contains('active')) {
+                document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'flex');
+                updateNavigationArrows();
+            }
         }
 
         // Navigate to page
@@ -1725,6 +1751,14 @@
                 stats: t.menuStats
             };
             document.getElementById('currentPageTitle').textContent = titles[pageName];
+
+            // Gestisci visibilità frecce navigazione
+            if (pageName === 'home') {
+                document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'flex');
+                updateNavigationArrows();
+            } else {
+                document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'none');
+            }
 
             // Close sidebar
             closeSidebar();
