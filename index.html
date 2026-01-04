@@ -541,7 +541,7 @@
 
         /* App Content */
         .app-content {
-            padding-top: 10px;
+            padding-top: 40px;
             padding-bottom: 20px;
             min-height: 100vh;
         }
@@ -1561,6 +1561,9 @@
             const modalTitle = document.getElementById('categoryModalTitle');
             const tasksList = document.getElementById('categoryTasksList');
 
+            // Hide navigation arrows when modal is open
+            document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'none');
+
             modalIcon.textContent = getCategoryIcon(category);
             modalTitle.textContent = category;
             tasksList.innerHTML = '<div class="loading">Caricamento attività...</div>';
@@ -1613,6 +1616,9 @@
             const overlay = document.querySelector('.category-modal-overlay');
             modal.classList.remove('show');
             overlay.classList.remove('show');
+            
+            // Show navigation arrows again when modal is closed
+            document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'flex');
         }
 
         // Update user badge with initials or avatar
