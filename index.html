@@ -576,43 +576,70 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             margin-bottom: 30px;
+            padding: 0 60px;
+            position: relative;
         }
 
         .date-nav-btn {
-            background: white;
-            border: 2px solid #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 20px;
-            color: #667eea;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            z-index: 100;
+            flex-shrink: 0;
         }
 
         .date-nav-btn:hover {
-            background: #667eea;
-            color: white;
-            transform: scale(1.1);
-            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
 
         .date-nav-btn:active {
-            transform: scale(0.95);
+            transform: scale(1.05);
+        }
+
+        .date-nav-btn.hidden {
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
         }
 
         .home-date {
             font-size: 18px;
             color: #667eea;
             font-weight: 500;
-            min-width: 300px;
             text-align: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 768px) {
+            .home-date-container {
+                padding: 0 10px;
+                gap: 10px;
+            }
+
+            .date-nav-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 22px;
+            }
+
+            .home-date {
+                font-size: 16px;
+            }
         }
 
         .categories-grid {
@@ -1040,7 +1067,7 @@
                     <div class="home-date-container">
                         <button class="date-nav-btn" onclick="changeDay(-1)" title="Giorno precedente">←</button>
                         <div class="home-date" id="homeDate"></div>
-                        <button class="date-nav-btn" onclick="changeDay(1)" title="Giorno successivo">→</button>
+                        <button class="date-nav-btn" id="nextDayBtn" onclick="changeDay(1)" title="Giorno successivo">→</button>
                     </div>
                     <div class="categories-grid" id="categoriesGrid">
                         <div class="loading">Caricamento categorie...</div>
@@ -1359,6 +1386,21 @@
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const dateString = currentSelectedDate.toLocaleDateString(currentLang === 'it' ? 'it-IT' : 'en-US', options);
             document.getElementById('homeDate').textContent = dateString;
+            
+            // Hide next day button if current selected date is today or in the future
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const selected = new Date(currentSelectedDate);
+            selected.setHours(0, 0, 0, 0);
+            
+            const nextDayBtn = document.getElementById('nextDayBtn');
+            if (nextDayBtn) {
+                if (selected >= today) {
+                    nextDayBtn.classList.add('hidden');
+                } else {
+                    nextDayBtn.classList.remove('hidden');
+                }
+            }
         }
 
         // Change day (offset: -1 for previous day, +1 for next day)
