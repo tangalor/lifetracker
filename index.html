@@ -578,7 +578,6 @@
             justify-content: center;
             gap: 15px;
             margin-bottom: 30px;
-            padding: 0 60px;
             position: relative;
         }
 
@@ -586,28 +585,38 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 24px;
+            font-size: 26px;
             color: white;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            position: relative;
-            z-index: 100;
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
             flex-shrink: 0;
         }
 
+        .date-nav-btn:first-of-type {
+            left: 20px;
+        }
+
+        .date-nav-btn:last-of-type {
+            right: 20px;
+        }
+
         .date-nav-btn:hover {
-            transform: scale(1.15);
+            transform: translateY(-50%) scale(1.15);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
 
         .date-nav-btn:active {
-            transform: scale(1.05);
+            transform: translateY(-50%) scale(1.05);
         }
 
         .date-nav-btn.hidden {
@@ -627,14 +636,29 @@
 
         @media (max-width: 768px) {
             .home-date-container {
-                padding: 0 10px;
                 gap: 10px;
             }
 
             .date-nav-btn {
-                width: 45px;
-                height: 45px;
+                width: 48px;
+                height: 48px;
                 font-size: 22px;
+            }
+
+            .date-nav-btn:first-of-type {
+                left: 10px;
+            }
+
+            .date-nav-btn:last-of-type {
+                right: 10px;
+            }
+
+            .date-nav-btn:hover {
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            .date-nav-btn:active {
+                transform: translateY(-50%) scale(1);
             }
 
             .home-date {
