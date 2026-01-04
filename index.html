@@ -689,6 +689,7 @@
             padding: 20px;
             padding-left: 60px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 8px solid;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
@@ -788,6 +789,7 @@
             padding: 20px;
             padding-left: 60px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 8px solid;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
@@ -882,9 +884,11 @@
         }
 
         .task-card {
+            background: white;
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 8px solid;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
@@ -1518,7 +1522,7 @@
             try {
                 const { data: tasks, error } = await supabaseClient
                     .from('attivita')
-                    .select('titolo')
+                    .select('titolo, codice_colore')
                     .eq('user_id', window.currentUser.id);
 
                 if (error) throw error;
@@ -1528,18 +1532,20 @@
                     return;
                 }
 
-                // Extract unique categories
-                const categoriesSet = new Set();
+                // Extract unique categories with their colors
+                const categoriesMap = new Map();
                 tasks.forEach(task => {
                     if (task.titolo && task.titolo.includes(' / ')) {
                         const category = task.titolo.split(' / ')[0].trim().toUpperCase();
-                        categoriesSet.add(category);
+                        if (!categoriesMap.has(category)) {
+                            categoriesMap.set(category, task.codice_colore || '#667eea');
+                        }
                     }
                 });
 
                 // Sort categories with specific ones at the end
                 const bottomCategories = ['AMICI', 'FRIENDS', 'AUTO', 'CAR', 'LAVORO', 'WORK', 'PERSONALE', 'PERSONAL'];
-                const categoriesArray = Array.from(categoriesSet);
+                const categoriesArray = Array.from(categoriesMap.keys());
                 
                 const topCategories = categoriesArray
                     .filter(cat => !bottomCategories.includes(cat))
@@ -1559,8 +1565,9 @@
                 // Render categories
                 categoriesGrid.innerHTML = categories.map(category => {
                     const icon = getCategoryIcon(category);
+                    const color = categoriesMap.get(category);
                     return `
-                        <div class="category-box" onclick="openCategoryModal('${escapeHtml(category)}')">
+                        <div class="category-box" onclick="openCategoryModal('${escapeHtml(category)}')" style="border-left-color: ${color};">
                             <span class="category-icon">${icon}</span>
                             <span class="category-label">${escapeHtml(category)}</span>
                         </div>
@@ -1617,7 +1624,7 @@
                 tasksList.innerHTML = categoryTasks.map(task => {
                     const color = task.codice_colore || '#667eea';
                     return `
-                        <div class="task-card" style="background-color: ${color};">
+                        <div class="task-card" style="border-left-color: ${color};">
                             <div class="task-title">${escapeHtml(task.titolo || '')}</div>
                             <div class="task-description">${escapeHtml(task.descrizione || '')}</div>
                         </div>
@@ -1812,7 +1819,7 @@
                 tasksList.innerHTML = tasks.map(task => {
                     const color = task.codice_colore || '#667eea';
                     return `
-                        <div class="task-card" style="background-color: ${color};">
+                        <div class="task-card" style="border-left-color: ${color};">
                             <div class="task-title">${escapeHtml(task.titolo || '')}</div>
                             <div class="task-description">${escapeHtml(task.descrizione || '')}</div>
                         </div>
