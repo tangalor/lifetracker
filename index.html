@@ -632,6 +632,16 @@
             text-align: center;
             flex: 1;
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .home-date-today {
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            text-transform: uppercase;
         }
 
         @media (max-width: 768px) {
@@ -677,7 +687,7 @@
             background: white;
             border-radius: 12px;
             padding: 20px;
-            padding-left: 50px;
+            padding-left: 60px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: all 0.3s;
@@ -776,7 +786,7 @@
             background: white;
             border-radius: 12px;
             padding: 20px;
-            padding-left: 50px;
+            padding-left: 60px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: all 0.3s;
@@ -872,11 +882,9 @@
         }
 
         .task-card {
-            background: white;
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-left: 5px solid;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
@@ -1427,14 +1435,23 @@
         function displayCurrentDate() {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const dateString = currentSelectedDate.toLocaleDateString(currentLang === 'it' ? 'it-IT' : 'en-US', options);
-            document.getElementById('homeDate').textContent = dateString;
             
-            // Hide next day button if current selected date is today or in the future
+            // Check if selected date is today
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const selected = new Date(currentSelectedDate);
             selected.setHours(0, 0, 0, 0);
+            const isToday = selected.getTime() === today.getTime();
             
+            // Update date display with "OGGI" if it's today
+            const homeDateEl = document.getElementById('homeDate');
+            if (isToday) {
+                homeDateEl.innerHTML = `<div>${dateString}</div><div class="home-date-today">${currentLang === 'it' ? 'OGGI' : 'TODAY'}</div>`;
+            } else {
+                homeDateEl.textContent = dateString;
+            }
+            
+            // Hide next day button if current selected date is today or in the future
             const nextDayBtn = document.getElementById('nextDayBtn');
             if (nextDayBtn) {
                 if (selected >= today) {
@@ -1600,7 +1617,7 @@
                 tasksList.innerHTML = categoryTasks.map(task => {
                     const color = task.codice_colore || '#667eea';
                     return `
-                        <div class="task-card" style="border-left-color: ${color};">
+                        <div class="task-card" style="background-color: ${color};">
                             <div class="task-title">${escapeHtml(task.titolo || '')}</div>
                             <div class="task-description">${escapeHtml(task.descrizione || '')}</div>
                         </div>
@@ -1729,6 +1746,12 @@
 
         // Navigate to page
         function navigateTo(pageName) {
+            // Close sidebar first
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+
             // Update active menu item
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.classList.remove('active');
@@ -1760,9 +1783,6 @@
                 document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'none');
             }
 
-            // Close sidebar
-            closeSidebar();
-
             // Load tasks if navigating to tasks page
             if (pageName === 'tasks') {
                 loadTasks();
@@ -1792,7 +1812,7 @@
                 tasksList.innerHTML = tasks.map(task => {
                     const color = task.codice_colore || '#667eea';
                     return `
-                        <div class="task-card" style="border-left-color: ${color};">
+                        <div class="task-card" style="background-color: ${color};">
                             <div class="task-title">${escapeHtml(task.titolo || '')}</div>
                             <div class="task-description">${escapeHtml(task.descrizione || '')}</div>
                         </div>
