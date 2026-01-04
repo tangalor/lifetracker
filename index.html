@@ -930,6 +930,19 @@
             .page {
                 padding: 15px;
             }
+
+            /* Hide auth container background on mobile when logged in */
+            body.logged-in {
+                background: white;
+                padding: 0;
+            }
+
+            body.logged-in .container {
+                box-shadow: none;
+                border-radius: 0;
+                max-width: 100%;
+                padding: 0;
+            }
         }
     </style>
 </head>
@@ -1379,6 +1392,9 @@
             authSection.classList.add('hidden');
             dashboardSection.classList.remove('hidden');
             
+            // Add logged-in class to body for styling
+            document.body.classList.add('logged-in');
+            
             // Initialize menu translations now that dashboard is visible
             document.getElementById('menuHome').textContent = t.menuHome;
             document.getElementById('menuTasks').textContent = t.menuTasks;
@@ -1431,6 +1447,10 @@
         function changeDay(offset) {
             currentSelectedDate.setDate(currentSelectedDate.getDate() + offset);
             displayCurrentDate();
+            
+            // Scroll to top of the page
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
             // Optionally reload categories for the selected date if needed
             // loadCategories();
         }
@@ -1498,7 +1518,19 @@
                     }
                 });
 
-                const categories = Array.from(categoriesSet).sort();
+                // Sort categories with specific ones at the end
+                const bottomCategories = ['AMICI', 'FRIENDS', 'AUTO', 'CAR', 'LAVORO', 'WORK', 'PERSONALE', 'PERSONAL'];
+                const categoriesArray = Array.from(categoriesSet);
+                
+                const topCategories = categoriesArray
+                    .filter(cat => !bottomCategories.includes(cat))
+                    .sort();
+                
+                const endCategories = categoriesArray
+                    .filter(cat => bottomCategories.includes(cat))
+                    .sort();
+                
+                const categories = [...topCategories, ...endCategories];
 
                 if (categories.length === 0) {
                     categoriesGrid.innerHTML = '<div class="no-tasks">Nessuna categoria disponibile</div>';
@@ -1741,6 +1773,10 @@
         function showAuth() {
             authSection.classList.remove('hidden');
             dashboardSection.classList.add('hidden');
+            
+            // Remove logged-in class from body
+            document.body.classList.remove('logged-in');
+            
             loginForm.reset();
             registerForm.reset();
             hideMessages();
