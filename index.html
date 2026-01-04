@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autenticazione Supabase</title>
+    <title>LifeTracker</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="languages.js"></script>
     <style>
@@ -572,12 +572,47 @@
             line-height: 1.5;
         }
 
+        .home-date-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .date-nav-btn {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 20px;
+            color: #667eea;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .date-nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .date-nav-btn:active {
+            transform: scale(0.95);
+        }
+
         .home-date {
             font-size: 18px;
             color: #667eea;
-            margin-bottom: 30px;
-            text-align: center;
             font-weight: 500;
+            min-width: 300px;
+            text-align: center;
         }
 
         .categories-grid {
@@ -676,14 +711,6 @@
             font-size: 24px;
             font-weight: 600;
             color: #333;
-        }
-
-        .home-date {
-            font-size: 18px;
-            color: #667eea;
-            margin-bottom: 30px;
-            text-align: center;
-            font-weight: 500;
         }
 
         .categories-grid {
@@ -1010,7 +1037,11 @@
             <div class="app-content">
                 <!-- Home Page -->
                 <div class="page active" id="homePage">
-                    <div class="home-date" id="homeDate"></div>
+                    <div class="home-date-container">
+                        <button class="date-nav-btn" onclick="changeDay(-1)" title="Giorno precedente">←</button>
+                        <div class="home-date" id="homeDate"></div>
+                        <button class="date-nav-btn" onclick="changeDay(1)" title="Giorno successivo">→</button>
+                    </div>
                     <div class="categories-grid" id="categoriesGrid">
                         <div class="loading">Caricamento categorie...</div>
                     </div>
@@ -1320,12 +1351,22 @@
             loadTasks();
         }
 
+        // Current selected date (defaults to today)
+        let currentSelectedDate = new Date();
+
         // Display current date
         function displayCurrentDate() {
-            const today = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const dateString = today.toLocaleDateString(currentLang === 'it' ? 'it-IT' : 'en-US', options);
+            const dateString = currentSelectedDate.toLocaleDateString(currentLang === 'it' ? 'it-IT' : 'en-US', options);
             document.getElementById('homeDate').textContent = dateString;
+        }
+
+        // Change day (offset: -1 for previous day, +1 for next day)
+        function changeDay(offset) {
+            currentSelectedDate.setDate(currentSelectedDate.getDate() + offset);
+            displayCurrentDate();
+            // Optionally reload categories for the selected date if needed
+            // loadCategories();
         }
 
         // Get category icon based on category name
@@ -1357,7 +1398,9 @@
                 'PERSONALE': '👤',
                 'PERSONAL': '👤',
                 'AMICI': '👫',
-                'FRIENDS': '👫'
+                'FRIENDS': '👫',
+                'AUTO': '🚗',
+                'CAR': '🚗'
             };
             return icons[category.toUpperCase()] || '📋';
         }
