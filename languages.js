@@ -30,7 +30,19 @@ const translations = {
         menuStats: "Statistiche",
         loadingTasks: "Caricamento attività...",
         noTasks: "Nessuna attività trovata",
-        tasksSubtitle: "Ecco la lista delle attività che sono disponibili per te"
+        tasksSubtitle: "Ecco la lista delle attività che sono disponibili per te",
+        trackedActivities: "Attività tracciate",
+        addTracking: "Aggiungi un tracciamento",
+        loadingCategories: "Caricamento categorie...",
+        loadingTracking: "Caricamento tracciamenti...",
+        loadingGeneric: "Caricamento...",
+        noTrackedActivities: "Non ci sono attività tracciate per questo giorno",
+        confirmDeleteTitle: "Conferma Eliminazione",
+        confirmDeleteMessage: "Sei sicuro di voler eliminare il tracciamento dell'attività",
+        confirmCancel: "Annulla",
+        confirmDelete: "Elimina",
+        deleteSuccess: "Tracciamento eliminato con successo",
+        deleteError: "Errore durante l'eliminazione del tracciamento"
     },
     en: {
         welcome: "LifeTracker ★",
@@ -62,7 +74,19 @@ const translations = {
         menuStats: "Statistics",
         loadingTasks: "Loading tasks...",
         noTasks: "No tasks found",
-        tasksSubtitle: "Here is the list of activities available to you"
+        tasksSubtitle: "Here is the list of activities available to you",
+        trackedActivities: "Tracked activities",
+        addTracking: "Add a tracking",
+        loadingCategories: "Loading categories...",
+        loadingTracking: "Loading tracking...",
+        loadingGeneric: "Loading...",
+        noTrackedActivities: "No tracked activities for this day",
+        confirmDeleteTitle: "Confirm Deletion",
+        confirmDeleteMessage: "Are you sure you want to delete the tracking for activity",
+        confirmCancel: "Cancel",
+        confirmDelete: "Delete",
+        deleteSuccess: "Tracking successfully deleted",
+        deleteError: "Error deleting tracking"
     }
 };
 

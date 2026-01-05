@@ -1273,7 +1273,7 @@
                     <span class="category-modal-title" id="categoryModalTitle"></span>
                 </div>
                 <div class="task-list" id="categoryTasksList">
-                    <div class="loading">Caricamento...</div>
+                    <div class="loading" id="loadingCategoryTasks">Caricamento...</div>
                 </div>
             </div>
 
@@ -1288,7 +1288,7 @@
                     <span class="category-modal-title" id="categoryModalTitle"></span>
                 </div>
                 <div class="task-list" id="categoryTasksList">
-                    <div class="loading">Caricamento...</div>
+                    <div class="loading" id="loadingCategoryTasks2">Caricamento...</div>
                 </div>
             </div>
 
@@ -1324,16 +1324,18 @@
                         <div class="home-date" id="homeDate"></div>
                         <button class="date-nav-btn" id="nextDayBtn" onclick="changeDay(1)" title="Giorno successivo">→</button>
                     </div>
-                    <div class="categories-grid" id="categoriesGrid">
-                        <div class="loading">Caricamento categorie...</div>
-                    </div>
                     
                     <!-- Tracked Activities Box -->
                     <div class="tracked-activities-box">
-                        <div class="tracked-activities-title">Attività Tracciate per Oggi</div>
+                        <div class="tracked-activities-title" id="trackedActivitiesTitle">Attività tracciate</div>
                         <div id="trackedActivitiesList">
-                            <div class="loading">Caricamento tracciamenti...</div>
+                            <div class="loading" id="loadingTracking">Caricamento tracciamenti...</div>
                         </div>
+                    </div>
+                    
+                    <div class="tracked-activities-title" id="addTrackingTitle" style="margin-top: 30px; margin-bottom: 15px;">Aggiungi un tracciamento</div>
+                    <div class="categories-grid" id="categoriesGrid">
+                        <div class="loading" id="loadingCategories">Caricamento categorie...</div>
                     </div>
                 </div>
 
@@ -1361,11 +1363,11 @@
             
             <!-- Confirmation Modal -->
             <div class="confirm-modal" id="confirmModal">
-                <div class="confirm-modal-title">Conferma Eliminazione</div>
+                <div class="confirm-modal-title" id="confirmModalTitle">Conferma Eliminazione</div>
                 <div class="confirm-modal-message" id="confirmModalMessage"></div>
                 <div class="confirm-modal-buttons">
-                    <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirmModal()">Annulla</button>
-                    <button class="confirm-btn confirm-btn-delete" onclick="confirmDelete()">Elimina</button>
+                    <button class="confirm-btn confirm-btn-cancel" id="confirmCancelBtn" onclick="closeConfirmModal()">Annulla</button>
+                    <button class="confirm-btn confirm-btn-delete" id="confirmDeleteBtn" onclick="confirmDelete()">Elimina</button>
                 </div>
             </div>
             
@@ -1640,6 +1642,11 @@
             document.getElementById('currentPageTitle').textContent = t.menuHome;
             document.getElementById('modalLogoutBtn').textContent = t.logout;
             document.getElementById('tasksSubtitle').textContent = t.tasksSubtitle;
+            document.getElementById('trackedActivitiesTitle').textContent = t.trackedActivities;
+            document.getElementById('addTrackingTitle').textContent = t.addTracking;
+            document.getElementById('confirmModalTitle').textContent = t.confirmDeleteTitle;
+            document.getElementById('confirmCancelBtn').textContent = t.confirmCancel;
+            document.getElementById('confirmDeleteBtn').textContent = t.confirmDelete;
             
             // Store current user
             window.currentUser = user;
@@ -1744,7 +1751,7 @@
         // Load categories from tasks
         async function loadCategories() {
             const categoriesGrid = document.getElementById('categoriesGrid');
-            categoriesGrid.innerHTML = '<div class="loading">Caricamento categorie...</div>';
+            categoriesGrid.innerHTML = `<div class="loading">${t.loadingCategories}</div>`;
 
             try {
                 const { data: tasks, error } = await supabaseClient
@@ -1819,7 +1826,7 @@
 
             modalIcon.textContent = getCategoryIcon(category);
             modalTitle.textContent = category;
-            tasksList.innerHTML = '<div class="loading">Caricamento attività...</div>';
+            tasksList.innerHTML = `<div class="loading">${t.loadingTasks}</div>`;
 
             modal.classList.add('show');
             overlay.classList.add('show');
@@ -2068,7 +2075,7 @@
         // Load tracked activities for current date
         async function loadTrackedActivities() {
             const trackedList = document.getElementById('trackedActivitiesList');
-            trackedList.innerHTML = '<div class="loading">Caricamento tracciamenti...</div>';
+            trackedList.innerHTML = `<div class="loading">${t.loadingTracking}</div>`;
 
             try {
                 // Format current date as YYYY-MM-DD
@@ -2092,7 +2099,7 @@
                 if (error) throw error;
 
                 if (!tracked || tracked.length === 0) {
-                    trackedList.innerHTML = '<div class="no-tracked-activities">Non ci sono attività tracciate per questo giorno</div>';
+                    trackedList.innerHTML = `<div class="no-tracked-activities">${t.noTrackedActivities}</div>`;
                     return;
                 }
 
@@ -2112,7 +2119,7 @@
                 }).join('');
             } catch (error) {
                 console.error('Error loading tracked activities:', error);
-                trackedList.innerHTML = '<div class="no-tracked-activities">Errore nel caricamento dei tracciamenti</div>';
+                trackedList.innerHTML = `<div class="no-tracked-activities">${t.deleteError}</div>`;
             }
         }
 
@@ -2126,7 +2133,7 @@
             const overlay = document.querySelector('.confirm-modal-overlay');
             const message = document.getElementById('confirmModalMessage');
             
-            message.textContent = `Sei sicuro di voler eliminare il tracciamento dell'attività "${activityTitle}"?`;
+            message.textContent = `${t.confirmDeleteMessage} "${activityTitle}"?`;
             
             modal.classList.add('show');
             overlay.classList.add('show');
@@ -2155,7 +2162,7 @@
                 if (error) throw error;
 
                 // Show success toast
-                showToast('Tracciamento eliminato con successo', 'success');
+                showToast(t.deleteSuccess, 'success');
 
                 // Close modal
                 closeConfirmModal();
@@ -2164,7 +2171,7 @@
                 loadTrackedActivities();
             } catch (error) {
                 console.error('Error deleting tracking:', error);
-                showToast('Errore durante l\'eliminazione del tracciamento', 'error');
+                showToast(t.deleteError, 'error');
             }
         }
 
