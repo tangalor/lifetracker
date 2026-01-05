@@ -1843,7 +1843,7 @@
                 tasksList.innerHTML = categoryTasks.map(task => {
                     const color = task.codice_colore || '#667eea';
                     return `
-                        <div class="task-card" style="border-left-color: ${color}; cursor: pointer;" onclick="trackActivity(${task.id})">
+                        <div class="task-card" style="border-left-color: ${color}; cursor: pointer;" onclick="trackActivity('${task.id}');">
                             <div class="task-title">${escapeHtml(task.titolo || '')}</div>
                             <div class="task-description">${escapeHtml(task.descrizione || '')}</div>
                         </div>
