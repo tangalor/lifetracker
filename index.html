@@ -1166,6 +1166,10 @@
 </head>
 <body>
     <div class="container">
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast"></div>
+
         <!-- Auth Section -->
         <div id="authSection">
             <h1 id="welcomeTitle"></h1>
@@ -1355,9 +1359,6 @@
                     <button class="confirm-btn confirm-btn-delete" id="confirmDeleteBtn" onclick="confirmDelete()">Elimina</button>
                 </div>
             </div>
-            
-            <!-- Toast Notification -->
-            <div class="toast" id="toast"></div>
         </div>
     </div>
 
@@ -1881,10 +1882,12 @@
                 // Reload tracked activities
                 loadTrackedActivities();
             } catch (error) {
-                console.error('Error tracking activity:', error);
+                
                 
                 // Show error toast (keep modal open so user can retry)
                 showToast(t.trackError, 'error');
+
+                console.error('Error tracking activity:', error);
             }
         }
 
@@ -2199,6 +2202,7 @@
 
         // Show toast notification
         function showToast(message, type = 'success') {
+            console.log('Showing toast:', message, type);
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.className = `toast ${type}`;
