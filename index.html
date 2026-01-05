@@ -1858,7 +1858,7 @@
                 tasksList.innerHTML = categoryTasks.map(task => {
                     const color = task.codice_colore || '#667eea';
                     return `
-                        <div class="task-card" style="border-left-color: ${color};">
+                        <div class="task-card" style="border-left-color: ${color}; cursor: pointer;" onclick="trackActivity(${task.id})">
                             <div class="task-title">${escapeHtml(task.titolo || '')}</div>
                             <div class="task-description">${escapeHtml(task.descrizione || '')}</div>
                         </div>
@@ -1867,6 +1867,37 @@
             } catch (error) {
                 console.error('Error loading category tasks:', error);
                 tasksList.innerHTML = '<div class="no-tasks">Errore nel caricamento delle attività</div>';
+            }
+        }
+
+        // Track activity - insert into tracciamento_attivita
+        async function trackActivity(activityId) {
+            try {
+                // Format current date as YYYY-MM-DD
+                const dateStr = currentSelectedDate.toISOString().split('T')[0];
+
+                // Insert tracking record
+                const { error } = await supabaseClient
+                    .from('tracciamento_attivita')
+                    .insert({
+                        user_id: window.currentUser.id,
+                        attivita_id: activityId,
+                        data_esecuzione: dateStr
+                    });
+
+                if (error) throw error;
+
+                // Show success toast
+                showToast(currentLang === 'it' ? 'Attività tracciata con successo!' : 'Activity tracked successfully!', 'success');
+
+                // Close modal
+                closeCategoryModal();
+
+                // Reload tracked activities
+                loadTrackedActivities();
+            } catch (error) {
+                console.error('Error tracking activity:', error);
+                showToast(currentLang === 'it' ? 'Errore nel tracciamento dell\'attività' : 'Error tracking activity', 'error');
             }
         }
 
