@@ -1707,7 +1707,7 @@
             const homePage = document.getElementById('homePage');
             if (homePage && homePage.classList.contains('active')) {
                 document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'flex');
-                updateNavigationArrows();
+                displayCurrentDate();
             }
         }
 
@@ -1726,7 +1726,7 @@
                 const homePage = document.getElementById('homePage');
                 if (homePage && homePage.classList.contains('active')) {
                     document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'flex');
-                    updateNavigationArrows();
+                    displayCurrentDate();
                 }
             }
         }
@@ -1742,7 +1742,7 @@
             const homePage = document.getElementById('homePage');
             if (homePage && homePage.classList.contains('active')) {
                 document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'flex');
-                updateNavigationArrows();
+                displayCurrentDate();
             }
         }
 
@@ -1780,7 +1780,7 @@
             // Gestisci visibilità frecce navigazione
             if (pageName === 'home') {
                 document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'flex');
-                updateNavigationArrows();
+                displayCurrentDate();
             } else {
                 document.querySelectorAll('.date-nav-btn').forEach(btn => btn.style.display = 'none');
             }
