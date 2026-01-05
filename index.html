@@ -576,47 +576,38 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 30px;
             position: relative;
+            padding: 0 10px;
         }
 
         .date-nav-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: transparent;
             border: none;
-            border-radius: 50%;
-            width: 55px;
-            height: 55px;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 26px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1000;
+            transition: all 0.2s ease;
+            font-size: 20px;
+            color: #999;
+            border-radius: 8px;
             flex-shrink: 0;
-        }
-
-        .date-nav-btn:first-of-type {
-            left: 20px;
-        }
-
-        .date-nav-btn:last-of-type {
-            right: 20px;
+            position: relative;
         }
 
         .date-nav-btn:hover {
-            transform: translateY(-50%) scale(1.15);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
         }
 
         .date-nav-btn:active {
-            transform: translateY(-50%) scale(1.05);
+            background: rgba(102, 126, 234, 0.2);
+            transform: scale(0.95);
         }
 
         .date-nav-btn.hidden {
@@ -646,33 +637,19 @@
 
         @media (max-width: 768px) {
             .home-date-container {
-                gap: 10px;
+                gap: 8px;
+                padding: 0 5px;
             }
 
             .date-nav-btn {
-                width: 48px;
-                height: 48px;
-                font-size: 22px;
-            }
-
-            .date-nav-btn:first-of-type {
-                left: 10px;
-            }
-
-            .date-nav-btn:last-of-type {
-                right: 10px;
-            }
-
-            .date-nav-btn:hover {
-                transform: translateY(-50%) scale(1.1);
-            }
-
-            .date-nav-btn:active {
-                transform: translateY(-50%) scale(1);
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                font-size: 18px;
             }
 
             .home-date {
-                font-size: 16px;
+                font-size: 15px;
             }
         }
 
@@ -1306,9 +1283,9 @@
                 <!-- Home Page -->
                 <div class="page active" id="homePage">
                     <div class="home-date-container">
-                        <button class="date-nav-btn" onclick="changeDay(-1)" title="Giorno precedente">←</button>
+                        <button class="date-nav-btn" onclick="changeDay(-1)" title="Giorno precedente">&lt;</button>
                         <div class="home-date" id="homeDate"></div>
-                        <button class="date-nav-btn" id="nextDayBtn" onclick="changeDay(1)" title="Giorno successivo">→</button>
+                        <button class="date-nav-btn" id="nextDayBtn" onclick="changeDay(1)" title="Giorno successivo">&gt;</button>
                     </div>
                     
                     <!-- Tracked Activities Box -->
