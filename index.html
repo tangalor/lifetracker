@@ -1119,11 +1119,11 @@
             transform: translateX(0);
         }
 
-        .toast.success {
+        .toast.show.success {
             background: #27ae60;
         }
 
-        .toast.error {
+        .toast.show.error {
             background: #e74c3c;
         }
 
@@ -2205,7 +2205,7 @@
             console.log('Showing toast:', message, type);
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.className = `toast ${type}`;
+            toast.className = `toast show ${type}`;
             toast.classList.add('show');
 
             // Auto hide after 3 seconds
