@@ -615,6 +615,14 @@
             pointer-events: none;
         }
 
+        .date-nav-placeholder {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            flex-shrink: 0;
+            visibility: hidden;
+        }
+
         .home-date {
             font-size: 18px;
             color: #667eea;
@@ -646,6 +654,12 @@
                 height: 48px;
                 min-width: 48px;
                 font-size: 22px;
+            }
+
+            .date-nav-placeholder {
+                width: 48px;
+                height: 48px;
+                min-width: 48px;
             }
 
             .home-date {
@@ -1287,6 +1301,7 @@
                         <button class="date-nav-btn" onclick="changeDay(-1)" title="Giorno precedente">&lt;</button>
                         <div class="home-date" id="homeDate"></div>
                         <button class="date-nav-btn" id="nextDayBtn" onclick="changeDay(1)" title="Giorno successivo">&gt;</button>
+                        <div class="date-nav-placeholder" id="nextDayPlaceholder"></div>
                     </div>
                     
                     <!-- Tracked Activities Box -->
@@ -1649,11 +1664,14 @@
             
             // Hide next day button if current selected date is today or in the future
             const nextDayBtn = document.getElementById('nextDayBtn');
-            if (nextDayBtn) {
+            const nextDayPlaceholder = document.getElementById('nextDayPlaceholder');
+            if (nextDayBtn && nextDayPlaceholder) {
                 if (selected >= today) {
-                    nextDayBtn.classList.add('hidden');
+                    nextDayBtn.style.display = 'none';
+                    nextDayPlaceholder.style.visibility = 'visible';
                 } else {
-                    nextDayBtn.classList.remove('hidden');
+                    nextDayBtn.style.display = 'flex';
+                    nextDayPlaceholder.style.visibility = 'hidden';
                 }
             }
         }
