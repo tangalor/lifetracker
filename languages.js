@@ -42,7 +42,9 @@ const translations = {
         confirmCancel: "Annulla",
         confirmDelete: "Elimina",
         deleteSuccess: "Tracciamento eliminato con successo",
-        deleteError: "Errore durante l'eliminazione del tracciamento"
+        deleteError: "Errore durante l'eliminazione del tracciamento",
+        trackSuccess: "Attività tracciata con successo!",
+        trackError: "Errore nel tracciamento dell'attività"
     },
     en: {
         welcome: "LifeTracker ★",
@@ -86,7 +88,9 @@ const translations = {
         confirmCancel: "Cancel",
         confirmDelete: "Delete",
         deleteSuccess: "Tracking successfully deleted",
-        deleteError: "Error deleting tracking"
+        deleteError: "Error deleting tracking",
+        trackSuccess: "Activity tracked successfully!",
+        trackError: "Error tracking activity"
     }
 };
 

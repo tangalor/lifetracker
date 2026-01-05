@@ -1876,7 +1876,7 @@
                 closeCategoryModal();
 
                 // Show success toast immediately after closing modal
-                showToast(currentLang === 'it' ? 'Attività tracciata con successo!' : 'Activity tracked successfully!', 'success');
+                showToast(t.trackSuccess, 'success');
 
                 // Reload tracked activities
                 loadTrackedActivities();
@@ -1884,7 +1884,7 @@
                 console.error('Error tracking activity:', error);
                 
                 // Show error toast (keep modal open so user can retry)
-                showToast(currentLang === 'it' ? 'Errore nel tracciamento dell\'attività' : 'Error tracking activity', 'error');
+                showToast(t.trackError, 'error');
             }
         }
 
@@ -2126,12 +2126,12 @@
                     const activity = item.attivita;
                     const color = activity.codice_colore || '#667eea';
                     return `
-                        <div class="tracked-activity-item" style="border-left-color: ${color};">
+                        <div class="tracked-activity-item" style="border-left-color: ${color};" data-tracking-id="${item.id}" data-activity-title="${escapeHtml(activity.titolo || '')}">
                             <div class="tracked-activity-content">
                                 <div class="tracked-activity-title">${escapeHtml(activity.titolo || '')}</div>
                                 <div class="tracked-activity-description">${escapeHtml(activity.descrizione || '')}</div>
                             </div>
-                            <button class="tracked-activity-delete" onclick="showDeleteConfirm(${item.id}, '${escapeHtml(activity.titolo)}')">×</button>
+                            <button class="tracked-activity-delete" onclick="showDeleteConfirm(this)">×</button>
                         </div>
                     `;
                 }).join('');
@@ -2145,7 +2145,11 @@
         let trackingToDelete = null;
 
         // Show delete confirmation modal
-        function showDeleteConfirm(trackingId, activityTitle) {
+        function showDeleteConfirm(button) {
+            const item = button.closest('.tracked-activity-item');
+            const trackingId = item.dataset.trackingId;
+            const activityTitle = item.dataset.activityTitle;
+            
             trackingToDelete = trackingId;
             const modal = document.getElementById('confirmModal');
             const overlay = document.querySelector('.confirm-modal-overlay');
