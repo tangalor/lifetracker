@@ -1107,23 +1107,20 @@
             font-size: 16px;
             font-weight: 500;
             color: white;
-            opacity: 0;
-            transform: translateX(400px);
-            transition: all 0.3s;
+            display: none;
             z-index: 500;
             max-width: 300px;
         }
 
         .toast.show {
-            opacity: 1;
-            transform: translateX(0);
+            display: block;
         }
 
-        .toast.show.success {
+        .toast.success {
             background: #27ae60;
         }
 
-        .toast.show.error {
+        .toast.error {
             background: #e74c3c;
         }
 
@@ -2205,7 +2202,7 @@
             console.log('Showing toast:', message, type);
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.className = `toast show ${type}`;
+            toast.className = `toast ${type}`;
             toast.classList.add('show');
 
             // Auto hide after 3 seconds
