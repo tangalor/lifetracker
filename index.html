@@ -1873,7 +1873,9 @@
                 if (error) throw error;
 
                 // Show success toast first
-                showToast(currentLang === 'it' ? 'Attività tracciata con successo!' : 'Activity tracked successfully!', 'success');
+                setTimeout(() => {
+                    showToast(currentLang === 'it' ? 'Attività tracciata con successo!' : 'Activity tracked successfully!', 'success');
+                }, 600);
 
                 // Close modal with small delay to ensure toast is visible
                 setTimeout(() => {
@@ -1885,7 +1887,15 @@
             } catch (error) {
                 
                 // Show error toast
-                showToast(currentLang === 'it' ? 'Errore nel tracciamento dell\'attività' : 'Error tracking activity', 'error');
+                setTimeout(() => {
+                    showToast(currentLang === 'it' ? 'Errore nel tracciamento dell\'attività' : 'Error tracking activity', 'error');    
+                }, 600);
+
+                // Close modal with small delay to ensure toast is visible
+                setTimeout(() => {
+                    closeCategoryModal();
+                }, 100);
+                
                 console.error('Error tracking activity:', error);
             }
         }
