@@ -923,6 +923,210 @@
             font-style: italic;
         }
 
+        /* Tracked Activities Box */
+        .tracked-activities-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tracked-activities-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tracked-activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            transition: all 0.2s;
+            border-left: 4px solid;
+        }
+
+        .tracked-activity-item:hover {
+            background: #f0f2f5;
+            transform: translateX(2px);
+        }
+
+        .tracked-activity-content {
+            flex: 1;
+        }
+
+        .tracked-activity-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .tracked-activity-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .tracked-activity-delete {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #fee;
+            color: #e74c3c;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .tracked-activity-delete:hover {
+            background: #e74c3c;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .no-tracked-activities {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Confirmation Modal */
+        .confirm-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 400;
+        }
+
+        .confirm-modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .confirm-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 450;
+        }
+
+        .confirm-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .confirm-modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .confirm-modal-message {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .confirm-modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .confirm-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .confirm-btn-cancel {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .confirm-btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .confirm-btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .confirm-btn-delete:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s;
+            z-index: 500;
+            max-width: 300px;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: #27ae60;
+        }
+
+        .toast.error {
+            background: #e74c3c;
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 25px;
@@ -1123,6 +1327,14 @@
                     <div class="categories-grid" id="categoriesGrid">
                         <div class="loading">Caricamento categorie...</div>
                     </div>
+                    
+                    <!-- Tracked Activities Box -->
+                    <div class="tracked-activities-box">
+                        <div class="tracked-activities-title">Attività Tracciate per Oggi</div>
+                        <div id="trackedActivitiesList">
+                            <div class="loading">Caricamento tracciamenti...</div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tasks Page -->
@@ -1143,6 +1355,22 @@
                     <div class="page-placeholder">Statistiche</div>
                 </div>
             </div>
+            
+            <!-- Confirmation Modal Overlay -->
+            <div class="confirm-modal-overlay" onclick="closeConfirmModal()"></div>
+            
+            <!-- Confirmation Modal -->
+            <div class="confirm-modal" id="confirmModal">
+                <div class="confirm-modal-title">Conferma Eliminazione</div>
+                <div class="confirm-modal-message" id="confirmModalMessage"></div>
+                <div class="confirm-modal-buttons">
+                    <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirmModal()">Annulla</button>
+                    <button class="confirm-btn confirm-btn-delete" onclick="confirmDelete()">Elimina</button>
+                </div>
+            </div>
+            
+            <!-- Toast Notification -->
+            <div class="toast" id="toast"></div>
         </div>
     </div>
 
@@ -1425,6 +1653,7 @@
             // Load categories and tasks
             loadCategories();
             loadTasks();
+            loadTrackedActivities();
         }
 
         // Current selected date (defaults to today)
@@ -1468,6 +1697,9 @@
             
             // Scroll to top of the page
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Reload tracked activities for the new date
+            loadTrackedActivities();
             
             // Optionally reload categories for the selected date if needed
             // loadCategories();
@@ -1831,6 +2063,122 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // Load tracked activities for current date
+        async function loadTrackedActivities() {
+            const trackedList = document.getElementById('trackedActivitiesList');
+            trackedList.innerHTML = '<div class="loading">Caricamento tracciamenti...</div>';
+
+            try {
+                // Format current date as YYYY-MM-DD
+                const dateStr = currentSelectedDate.toISOString().split('T')[0];
+
+                // Query tracked activities with JOIN to attivita table
+                const { data: tracked, error } = await supabaseClient
+                    .from('tracciamento_attivita')
+                    .select(`
+                        id,
+                        attivita_id,
+                        attivita:attivita_id (
+                            titolo,
+                            descrizione,
+                            codice_colore
+                        )
+                    `)
+                    .eq('user_id', window.currentUser.id)
+                    .eq('data', dateStr);
+
+                if (error) throw error;
+
+                if (!tracked || tracked.length === 0) {
+                    trackedList.innerHTML = '<div class="no-tracked-activities">Non ci sono attività tracciate per questo giorno</div>';
+                    return;
+                }
+
+                // Render tracked activities
+                trackedList.innerHTML = tracked.map(item => {
+                    const activity = item.attivita;
+                    const color = activity.codice_colore || '#667eea';
+                    return `
+                        <div class="tracked-activity-item" style="border-left-color: ${color};">
+                            <div class="tracked-activity-content">
+                                <div class="tracked-activity-title">${escapeHtml(activity.titolo || '')}</div>
+                                <div class="tracked-activity-description">${escapeHtml(activity.descrizione || '')}</div>
+                            </div>
+                            <button class="tracked-activity-delete" onclick="showDeleteConfirm(${item.id}, '${escapeHtml(activity.titolo)}')">×</button>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading tracked activities:', error);
+                trackedList.innerHTML = '<div class="no-tracked-activities">Errore nel caricamento dei tracciamenti</div>';
+            }
+        }
+
+        // Variable to store the ID of the tracking to delete
+        let trackingToDelete = null;
+
+        // Show delete confirmation modal
+        function showDeleteConfirm(trackingId, activityTitle) {
+            trackingToDelete = trackingId;
+            const modal = document.getElementById('confirmModal');
+            const overlay = document.querySelector('.confirm-modal-overlay');
+            const message = document.getElementById('confirmModalMessage');
+            
+            message.textContent = `Sei sicuro di voler eliminare il tracciamento dell'attività "${activityTitle}"?`;
+            
+            modal.classList.add('show');
+            overlay.classList.add('show');
+        }
+
+        // Close confirmation modal
+        function closeConfirmModal() {
+            const modal = document.getElementById('confirmModal');
+            const overlay = document.querySelector('.confirm-modal-overlay');
+            
+            modal.classList.remove('show');
+            overlay.classList.remove('show');
+            trackingToDelete = null;
+        }
+
+        // Confirm and execute delete
+        async function confirmDelete() {
+            if (!trackingToDelete) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('tracciamento_attivita')
+                    .delete()
+                    .eq('id', trackingToDelete);
+
+                if (error) throw error;
+
+                // Show success toast
+                showToast('Tracciamento eliminato con successo', 'success');
+
+                // Close modal
+                closeConfirmModal();
+
+                // Reload tracked activities
+                loadTrackedActivities();
+            } catch (error) {
+                console.error('Error deleting tracking:', error);
+                showToast('Errore durante l\'eliminazione del tracciamento', 'error');
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
         // Show auth
