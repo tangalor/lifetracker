@@ -1666,7 +1666,7 @@
             const nextDayBtn = document.getElementById('nextDayBtn');
             const nextDayPlaceholder = document.getElementById('nextDayPlaceholder');
             if (nextDayBtn && nextDayPlaceholder) {
-                if (selected >= today) {
+                if (selected < today) {
                     nextDayBtn.style.display = 'none';
                     nextDayPlaceholder.style.visibility = 'visible';
                 } else {
