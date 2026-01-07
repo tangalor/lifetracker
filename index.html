@@ -1087,6 +1087,65 @@
             transform: translateY(-2px);
         }
 
+        .confirm-btn-save {
+            background: #27ae60;
+            color: white;
+        }
+
+        .confirm-btn-save:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        /* Edit Modal Form */
+        .edit-modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .edit-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .edit-form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .edit-form-input {
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .edit-form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .edit-form-textarea {
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .edit-form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
         /* Toast Notification */
         .toast {
             position: fixed;
@@ -1346,6 +1405,28 @@
                 <div class="confirm-modal-buttons">
                     <button class="confirm-btn confirm-btn-cancel" id="confirmCancelBtn" onclick="closeConfirmModal()">Annulla</button>
                     <button class="confirm-btn confirm-btn-delete" id="confirmDeleteBtn" onclick="confirmDelete()">Elimina</button>
+                </div>
+            </div>
+            
+            <!-- Edit Activity Modal Overlay -->
+            <div class="confirm-modal-overlay" id="editModalOverlay" onclick="closeEditModal()"></div>
+            
+            <!-- Edit Activity Modal -->
+            <div class="confirm-modal" id="editModal">
+                <div class="confirm-modal-title" id="editModalTitle">Modifica Attività</div>
+                <div class="edit-modal-form">
+                    <div class="edit-form-group">
+                        <label class="edit-form-label" for="editQuantity">Quantità</label>
+                        <input type="number" class="edit-form-input" id="editQuantity" min="1" max="20" value="1">
+                    </div>
+                    <div class="edit-form-group">
+                        <label class="edit-form-label" for="editNotes">Note</label>
+                        <textarea class="edit-form-textarea" id="editNotes" placeholder="Aggiungi note (facoltativo)"></textarea>
+                    </div>
+                </div>
+                <div class="confirm-modal-buttons">
+                    <button class="confirm-btn confirm-btn-cancel" onclick="closeEditModal()">Annulla</button>
+                    <button class="confirm-btn confirm-btn-save" onclick="saveEditActivity()">Salva</button>
                 </div>
             </div>
         </div>
@@ -2135,13 +2216,15 @@
                 trackedList.innerHTML = tracked.map(item => {
                     const activity = item.attivita;
                     const color = activity.codice_colore || '#667eea';
+                    const quantity = item.quantita || 1;
+                    const notes = item.note || '';
                     return `
-                        <div class="tracked-activity-item" style="border-left-color: ${color};" data-tracking-id="${item.id}" data-activity-title="${escapeHtml(activity.titolo || '')}">
+                        <div class="tracked-activity-item" style="border-left-color: ${color}; cursor: pointer;" data-tracking-id="${item.id}" data-activity-title="${escapeHtml(activity.titolo || '')}" data-quantity="${quantity}" data-notes="${escapeHtml(notes)}" onclick="openEditModal(this)">
                             <div class="tracked-activity-content">
                                 <div class="tracked-activity-title">${escapeHtml(activity.titolo || '')}</div>
                                 <div class="tracked-activity-description">${escapeHtml(activity.descrizione || '')}</div>
                             </div>
-                            <button class="tracked-activity-delete" onclick="showDeleteConfirm(this)">×</button>
+                            <button class="tracked-activity-delete" onclick="event.stopPropagation(); showDeleteConfirm(this)">×</button>
                         </div>
                     `;
                 }).join('');
@@ -2153,6 +2236,78 @@
 
         // Variable to store the ID of the tracking to delete
         let trackingToDelete = null;
+        
+        // Variable to store the ID of the tracking to edit
+        let trackingToEdit = null;
+
+        // Open edit modal
+        function openEditModal(item) {
+            const trackingId = item.dataset.trackingId;
+            const activityTitle = item.dataset.activityTitle;
+            const quantity = parseInt(item.dataset.quantity) || 1;
+            const notes = item.dataset.notes || '';
+            
+            trackingToEdit = trackingId;
+            
+            // Set modal content
+            document.getElementById('editModalTitle').textContent = activityTitle;
+            document.getElementById('editQuantity').value = quantity;
+            document.getElementById('editNotes').value = notes;
+            
+            // Show modal
+            const modal = document.getElementById('editModal');
+            const overlay = document.getElementById('editModalOverlay');
+            modal.classList.add('show');
+            overlay.classList.add('show');
+        }
+        
+        // Close edit modal
+        function closeEditModal() {
+            const modal = document.getElementById('editModal');
+            const overlay = document.getElementById('editModalOverlay');
+            modal.classList.remove('show');
+            overlay.classList.remove('show');
+            trackingToEdit = null;
+        }
+        
+        // Save edited activity
+        async function saveEditActivity() {
+            if (!trackingToEdit) return;
+            
+            try {
+                const quantity = parseInt(document.getElementById('editQuantity').value);
+                const notes = document.getElementById('editNotes').value.trim();
+                
+                // Validate quantity
+                if (quantity < 1 || quantity > 20) {
+                    showToast('La quantità deve essere tra 1 e 20', 'error');
+                    return;
+                }
+                
+                // Update tracking in database
+                const { error } = await supabaseClient
+                    .from('tracciamento_attivita')
+                    .update({
+                        quantita: quantity,
+                        note: notes || null
+                    })
+                    .eq('id', trackingToEdit);
+                
+                if (error) throw error;
+                
+                // Close modal
+                closeEditModal();
+                
+                // Show success toast
+                showToast('Attività aggiornata con successo', 'success');
+                
+                // Reload tracked activities
+                loadTrackedActivities();
+            } catch (error) {
+                console.error('Error updating activity:', error);
+                showToast('Errore nell\'aggiornamento dell\'attività', 'error');
+            }
+        }
 
         // Show delete confirmation modal
         function showDeleteConfirm(button) {
