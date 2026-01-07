@@ -966,6 +966,35 @@
             line-height: 1.4;
         }
 
+        .tracked-activity-notes {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.4;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .tracked-activity-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .tracked-activity-quantity {
+            min-width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
         .tracked-activity-delete {
             width: 32px;
             height: 32px;
@@ -2218,13 +2247,28 @@
                     const color = activity.codice_colore || '#667eea';
                     const quantity = item.quantita || 1;
                     const notes = item.note || '';
+                    
+                    // Build quantity badge HTML (only if quantity > 1)
+                    const quantityBadge = quantity > 1 
+                        ? `<div class="tracked-activity-quantity" style="background: ${color};">${quantity}</div>`
+                        : '';
+                    
+                    // Build notes HTML (only if notes exist)
+                    const notesHtml = notes.trim() 
+                        ? `<div class="tracked-activity-notes">NOTE: ${escapeHtml(notes)}</div>`
+                        : '';
+                    
                     return `
                         <div class="tracked-activity-item" style="border-left-color: ${color}; cursor: pointer;" data-tracking-id="${item.id}" data-activity-title="${escapeHtml(activity.titolo || '')}" data-quantity="${quantity}" data-notes="${escapeHtml(notes)}" onclick="openEditModal(this)">
                             <div class="tracked-activity-content">
                                 <div class="tracked-activity-title">${escapeHtml(activity.titolo || '')}</div>
                                 <div class="tracked-activity-description">${escapeHtml(activity.descrizione || '')}</div>
+                                ${notesHtml}
                             </div>
-                            <button class="tracked-activity-delete" onclick="event.stopPropagation(); showDeleteConfirm(this)">×</button>
+                            <div class="tracked-activity-actions">
+                                ${quantityBadge}
+                                <button class="tracked-activity-delete" onclick="event.stopPropagation(); showDeleteConfirm(this)">×</button>
+                            </div>
                         </div>
                     `;
                 }).join('');
