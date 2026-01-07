@@ -2091,6 +2091,7 @@
         // Load tracked activities for current date
         async function loadTrackedActivities() {
             const trackedList = document.getElementById('trackedActivitiesList');
+            const trackedTitle = document.getElementById('trackedActivitiesTitle');
             trackedList.innerHTML = `<div class="loading">${t.loadingTracking}</div>`;
 
             try {
@@ -2115,8 +2116,19 @@
                 if (error) throw error;
 
                 if (!tracked || tracked.length === 0) {
+                    // Hide title and border when no activities
+                    if (trackedTitle) {
+                        trackedTitle.style.display = 'none';
+                    }
                     trackedList.innerHTML = `<div class="no-tracked-activities">${t.noTrackedActivities}</div>`;
                     return;
+                }
+
+                // Show title with count
+                if (trackedTitle) {
+                    trackedTitle.style.display = 'block';
+                    const count = tracked.length;
+                    trackedTitle.textContent = `${count} ${t.trackedActivities}`;
                 }
 
                 // Render tracked activities
