@@ -1808,6 +1808,8 @@
                 'CASA': '🏠',
                 'CASA CIBO': '🏠',
                 'PIETRO': '👦',
+                'FIGLIO': '👦',
+                'CHILD': '👦',
                 'HOME': '🏠',
                 'SPORT': '⚽',
                 'FITNESS': '🏋️',
@@ -1831,7 +1833,9 @@
                 'AMICI': '👫',
                 'FRIENDS': '👫',
                 'AUTO': '🚗',
-                'CAR': '🚗'
+                'CAR': '🚗',
+                'CIBO': '🍔',
+                'FOOD': '🍔',
             };
             return icons[category.toUpperCase()] || '📋';
         }
@@ -2250,9 +2254,21 @@
                     const quantity = item.quantita || 1;
                     const notes = item.note || '';
                     
+                    // Extract category and activity name from title
+                    let displayTitle = activity.titolo || '';
+                    let categoryIcon = '';
+                    
+                    if (displayTitle.includes(' / ')) {
+                        const parts = displayTitle.split(' / ');
+                        const category = parts[0].trim();
+                        const activityName = parts.slice(1).join(' / ').trim();
+                        categoryIcon = getCategoryIcon(category);
+                        displayTitle = `${categoryIcon} ${activityName}`;
+                    }
+                    
                     // Build quantity badge HTML (only if quantity > 1)
                     const quantityBadge = quantity > 1 
-                        ? `<div class="tracked-activity-quantity" style="background: ${color};">${quantity}</div>`
+                        ? `<div class="tracked-activity-quantity" style="background: ${color};opacity: 0.7;">${quantity}</div>`
                         : '';
                     
                     // Build notes HTML (only if notes exist)
@@ -2263,7 +2279,7 @@
                     return `
                         <div class="tracked-activity-item" style="border-left-color: ${color}; cursor: pointer;" data-tracking-id="${item.id}" data-activity-title="${escapeHtml(activity.titolo || '')}" data-quantity="${quantity}" data-notes="${escapeHtml(notes)}" onclick="openEditModal(this)">
                             <div class="tracked-activity-content">
-                                <div class="tracked-activity-title">${escapeHtml(activity.titolo || '')}</div>
+                                <div class="tracked-activity-title">${displayTitle}</div>
                                 <div class="tracked-activity-description">${escapeHtml(activity.descrizione || '')}</div>
                                 ${notesHtml}
                             </div>
