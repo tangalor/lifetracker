@@ -1203,6 +1203,62 @@
             background: #e74c3c;
         }
 
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            background-size: 200% 200%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        .splash-screen.fade-out {
+            animation: fadeOut 0.5s ease forwards;
+        }
+
+        .splash-logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            letter-spacing: 2px;
+            animation: fadeInScale 1s ease;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 25px;
@@ -1241,6 +1297,11 @@
     </style>
 </head>
 <body>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-logo">LifeTracker</div>
+    </div>
+
     <div class="container">
 
         <!-- Toast Notification -->
@@ -1468,6 +1529,38 @@
         
         const { createClient } = supabase;
         const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Hide splash screen after delay
+        async function hideSplashScreen() {
+            const splashScreen = document.getElementById('splashScreen');
+            
+            // Wait minimum 2 seconds
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Fade out splash screen
+            splashScreen.classList.add('fade-out');
+            
+            // Remove from DOM after animation
+            setTimeout(() => {
+                splashScreen.remove();
+            }, 500);
+        }
+
+        // Hide splash screen after checking auth
+        async function hideSplashScreen() {
+            const splashScreen = document.getElementById('splashScreen');
+            
+            // Wait minimum 2 seconds
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Fade out splash screen
+            splashScreen.classList.add('fade-out');
+            
+            // Remove from DOM after animation
+            setTimeout(() => {
+                splashScreen.remove();
+            }, 500);
+        }
 
         // Initialize translations
         function initTranslations() {
@@ -2482,6 +2575,9 @@
 
         // Check initial session
         async function checkSession() {
+            // Hide splash screen first
+            await hideSplashScreen();
+            
             const { data: { session } } = await supabaseClient.auth.getSession();
             
             if (session && session.user) {
